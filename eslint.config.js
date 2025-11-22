@@ -7,7 +7,7 @@ import { defineConfig } from "eslint/config";
 
 export default defineConfig(
   {
-    ignores: ["**/*.js", "src/docs/**/*"]
+    ignores: ["**/*.js", "src/docs/**/*", "**/*.test.ts"]
   },
   eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,

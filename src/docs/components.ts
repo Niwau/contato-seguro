@@ -7,14 +7,14 @@ export const components: OpenAPIV3.ComponentsObject = {
       type: "object",
       properties: {
         code: { type: "integer", example: 400 },
-        message: { type: "string", example: "Mensagem explicativa do erro" },
+        message: { type: "string", example: "Validation error" },
         fields: {
           type: "array",
           items: {
             type: "object",
             properties: {
-              message: { type: "string" },
-              path: { type: "string" }
+              message: { type: "string", example: "Required" },
+              path: { type: "string", example: "address.city" }
             }
           }
         }
@@ -24,7 +24,7 @@ export const components: OpenAPIV3.ComponentsObject = {
       type: "object",
       properties: {
         code: { type: "integer", example: 400 },
-        message: { type: "string", example: "Mensagem explicativa do erro" }
+        message: { type: "string", example: "Invalid ID" }
       }
     },
     // --- Company Schemas ---

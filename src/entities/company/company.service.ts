@@ -5,6 +5,8 @@ import { isValidObjectId } from "mongoose";
 
 import { CompanyDTO, CompanyModel, CreateCompanyDTO, createCompanySchema, UpdateCompanyDTO } from "./company.model.js";
 
+const ENTITY = "Company";
+
 export class CompanyService {
   async create(data: CreateCompanyDTO): Promise<CompanyDTO> {
     const dto = createCompanySchema.parse(data);
@@ -14,7 +16,7 @@ export class CompanyService {
     });
 
     if (company) {
-      throw new APIError("Company with this CNPJ already exists", 409);
+      throw APIError.alreadyExists(ENTITY);
     }
 
     return new CompanyModel(dto).save();
@@ -22,13 +24,13 @@ export class CompanyService {
 
   async delete(id: string): Promise<void> {
     if (!isValidObjectId(id)) {
-      throw new APIError("Invalid ID", 400);
+      throw APIError.objectId();
     }
 
     const company = await CompanyModel.findByIdAndDelete(id);
 
     if (!company) {
-      throw new APIError("Company not found", 404);
+      throw APIError.notFound(ENTITY);
     }
   }
 
@@ -39,13 +41,13 @@ export class CompanyService {
 
   async findById(id: string): Promise<CompanyDTO | null> {
     if (!isValidObjectId(id)) {
-      throw new APIError("Invalid ID", 400);
+      throw APIError.objectId();
     }
 
     const company = await CompanyModel.findById(id);
 
     if (!company) {
-      throw new APIError("Company not found", 404);
+      throw APIError.notFound(ENTITY);
     }
 
     return company;
@@ -53,7 +55,7 @@ export class CompanyService {
 
   async findEmployees(id: string, params?: PaginationParams): Promise<EmployeeDTO[]> {
     if (!isValidObjectId(id)) {
-      throw new APIError("Invalid ID", 400);
+      throw APIError.objectId();
     }
     const { limit, skip } = paginate(params);
     return EmployeeModel.find({ company: id }).skip(skip).limit(limit);
@@ -61,7 +63,7 @@ export class CompanyService {
 
   async update(id: string, data: UpdateCompanyDTO): Promise<CompanyDTO | null> {
     if (!isValidObjectId(id)) {
-      throw new APIError("Invalid ID", 400);
+      throw APIError.objectId();
     }
 
     const company = await CompanyModel.findByIdAndUpdate(id, data, {
@@ -69,7 +71,7 @@ export class CompanyService {
     });
 
     if (!company) {
-      throw new APIError("Company not found", 404);
+      throw APIError.notFound(ENTITY);
     }
 
     return company;

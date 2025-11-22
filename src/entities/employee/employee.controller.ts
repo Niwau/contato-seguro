@@ -19,7 +19,7 @@ export class EmployeeController {
   delete = async (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
     try {
       await service.delete(req.params.id);
-      res.status(204);
+      res.status(204).json();
     } catch (e) {
       next(e);
     }

@@ -1,18 +1,21 @@
 import { SERVER_PORT } from "#config/constants.js";
 import { mongo } from "#config/mongo.js";
-import { routes } from "#routes.js";
 import { logger } from "#utils/logger.js";
-import express from "express";
 
-const app = express();
-app.use(express.json());
+import { app } from "./app.js";
 
-await mongo.connect().catch((e: unknown) => {
-  logger.error("Failed to connect to MongoDB:", e);
-});
+async function boostrap() {
+  await mongo.connect();
 
-app.use("/api/v1", routes);
+  app.listen(SERVER_PORT, () => {
+    logger.info(`Server started on port ${SERVER_PORT.toString()}`);
+  });
+}
 
-app.listen(SERVER_PORT, () => {
-  logger.info(`Server started!`);
+boostrap().catch((e: unknown) => {
+  if (e instanceof Error) {
+    return logger.error(e.message);
+  }
+
+  logger.error("An unknown error occurred during bootstrap");
 });

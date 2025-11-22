@@ -13,13 +13,15 @@ import {
   updateEmployeeSchema
 } from "./employee.model.js";
 
+const ENTITY = "Employee";
+
 export class EmployeeService {
   async create(data: CreateEmployeeDTO): Promise<EmployeeDTO> {
     const dto = createEmployeeSchema.parse(data);
     const company = await CompanyModel.findById(dto.companyId);
 
     if (!company) {
-      throw new APIError("Associated company not found", 404);
+      throw APIError.notFound("Associated company");
     }
 
     const employee = await EmployeeModel.findOne({
@@ -27,7 +29,7 @@ export class EmployeeService {
     });
 
     if (employee) {
-      throw new APIError("Employee with this email already exists", 409);
+      throw APIError.alreadyExists(ENTITY);
     }
 
     const hashedPassword = await hashPassword(dto.password);
@@ -39,13 +41,13 @@ export class EmployeeService {
 
   async delete(id: string): Promise<void> {
     if (!isValidObjectId(id)) {
-      throw new APIError("Invalid employee ID", 400);
+      throw APIError.objectId();
     }
 
     const employee = await EmployeeModel.findByIdAndDelete(id);
 
     if (!employee) {
-      throw new APIError("Employee not found", 404);
+      throw APIError.notFound(ENTITY);
     }
   }
 
@@ -56,13 +58,13 @@ export class EmployeeService {
 
   async findById(id: string): Promise<EmployeeDTO | null> {
     if (!isValidObjectId(id)) {
-      throw new APIError("Invalid ID", 400);
+      throw APIError.objectId();
     }
 
     const employee = await EmployeeModel.findById(id);
 
     if (!employee) {
-      throw new APIError("Employee not found", 404);
+      throw APIError.notFound(ENTITY);
     }
 
     return employee;
@@ -70,7 +72,7 @@ export class EmployeeService {
 
   async update(id: string, data: UpdateEmployeeDTO): Promise<EmployeeDTO | null> {
     if (!isValidObjectId(id)) {
-      throw new APIError("Invalid ID", 400);
+      throw APIError.objectId();
     }
 
     const dto = updateEmployeeSchema.parse(data);
@@ -80,7 +82,7 @@ export class EmployeeService {
     });
 
     if (!employee) {
-      throw new APIError("Employee not found", 404);
+      throw APIError.notFound(ENTITY);
     }
 
     return employee;
