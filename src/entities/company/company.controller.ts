@@ -43,6 +43,15 @@ export class CompanyController {
     }
   };
 
+  findEmployees = async (req: Request<PaginationParams & { id: string }>, res: Response, next: NextFunction) => {
+    try {
+      const response = await service.findEmployees(req.params.id, req.params);
+      res.status(200).json(response);
+    } catch (e) {
+      next(e);
+    }
+  };
+
   update = async (req: Request<{ id: string }, object, UpdateCompanyDTO>, res: Response, next: NextFunction) => {
     try {
       const response = await service.update(req.params.id, req.body);

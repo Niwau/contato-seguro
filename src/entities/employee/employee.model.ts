@@ -3,7 +3,7 @@ import z from "zod";
 
 const employeeSchema = new Schema(
   {
-    company: {
+    companyId: {
       ref: "Company",
       required: true,
       type: Schema.Types.ObjectId
@@ -73,7 +73,7 @@ export const updateEmployeeSchema = createEmployeeSchema.partial().omit({
 });
 
 export type CreateEmployeeDTO = z.infer<typeof createEmployeeSchema>;
-export type EmployeeDTO = mongoose.InferSchemaType<typeof employeeSchema>;
+export type EmployeeDTO = Omit<mongoose.InferSchemaType<typeof employeeSchema>, "password">;
 export type UpdateEmployeeDTO = z.infer<typeof updateEmployeeSchema>;
 
 export const EmployeeModel = mongoose.model("Employee", employeeSchema);

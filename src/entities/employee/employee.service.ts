@@ -1,5 +1,6 @@
 import { CompanyModel } from "#entities/company/company.model.js";
 import { APIError } from "#utils/error.js";
+import { hashPassword } from "#utils/hash.js";
 import { paginate, PaginationParams } from "#utils/pagination.js";
 import { isValidObjectId } from "mongoose";
 
@@ -29,7 +30,11 @@ export class EmployeeService {
       throw new APIError("Employee with this email already exists", 409);
     }
 
-    return new EmployeeModel(dto).save();
+    const hashedPassword = await hashPassword(dto.password);
+    dto.password = hashedPassword;
+
+    // TODO: remove password from returned object
+    return await new EmployeeModel(dto).save();
   }
 
   async delete(id: string): Promise<void> {
