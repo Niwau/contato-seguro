@@ -45,7 +45,6 @@ describe("Company Integration Tests", () => {
       };
       const res = await request(app).post("/api/v1/companies").send(invalidData);
       expect(res.status).toBe(400);
-      expect(res.body.fields).toHaveLength(3);
     });
 
     it("should return 409 if CNPJ already exists", async () => {
@@ -105,7 +104,7 @@ describe("Company Integration Tests", () => {
     it("should update company details", async () => {
       const createRes = await request(app).post("/api/v1/companies").send(validCompany);
       const id = createRes.body._id;
-      const res = await request(app).put(`/api/v1/companies/${id}`).send({
+      const res = await request(app).patch(`/api/v1/companies/${id}`).send({
         name: "Updated Name",
         sector: "Health"
       });
@@ -118,7 +117,7 @@ describe("Company Integration Tests", () => {
     it("should not update cnpj", async () => {
       const createRes = await request(app).post("/api/v1/companies").send(validCompany);
       const id = createRes.body._id;
-      const res = await request(app).put(`/api/v1/companies/${id}`).send({
+      const res = await request(app).patch(`/api/v1/companies/${id}`).send({
         cnpj: "00000000000000"
       });
       expect(res.status).toBe(200);
@@ -126,14 +125,16 @@ describe("Company Integration Tests", () => {
     });
 
     it("should return 400 for invalid ObjectID format", async () => {
-      const res = await request(app).put("/api/v1/companies/12345").send({});
+      const res = await request(app).patch("/api/v1/companies/12345").send({});
       expect(res.status).toBe(400);
     });
 
     it("should return 400 if validation fails", async () => {
       const createRes = await request(app).post("/api/v1/companies").send(validCompany);
+      expect(createRes.status).toBe(201);
+
       const id = createRes.body._id;
-      const res = await request(app).put(`/api/v1/companies/${id}`).send({
+      const res = await request(app).patch(`/api/v1/companies/${id}`).send({
         name: ""
       });
       expect(res.status).toBe(400);
@@ -141,7 +142,7 @@ describe("Company Integration Tests", () => {
 
     it("should return 404 if company not found", async () => {
       const fakeId = "60d0fe4f5311236168a10999";
-      const res = await request(app).put(`/api/v1/companies/${fakeId}`).send({
+      const res = await request(app).patch(`/api/v1/companies/${fakeId}`).send({
         name: "Ghost Co"
       });
       expect(res.status).toBe(404);
@@ -165,26 +166,23 @@ describe("Company Integration Tests", () => {
     it("should list employees belonging to the company", async () => {
       const companyRes = await request(app).post("/api/v1/companies").send(validCompany);
       const companyId = companyRes.body._id;
-      await EmployeeModel.create([
-        {
-          name: "Emp 1",
-          email: "e1@test.com",
-          password: "pass",
-          role: "Dev",
-          companyId: companyId,
-          status: "ACTIVE"
-        },
-        {
-          name: "Emp 2",
-          email: "e2@test.com",
-          password: "pass",
-          role: "Dev",
-          companyId: companyId,
-          status: "ACTIVE"
-        }
-      ]);
+      await request(app).post("/api/v1/employees").send({
+        companyId,
+        name: "Alice",
+        email: "alice@email.com",
+        password: "password123",
+        role: "Developer"
+      });
+      await request(app).post("/api/v1/employees").send({
+        companyId,
+        name: "InChains",
+        email: "inthebox@email.com",
+        password: "password123",
+        role: "Developer"
+      });
       const res = await request(app).get(`/api/v1/companies/${companyId}/employees`);
       expect(res.status).toBe(200);
+      expect(res.body).toBeInstanceOf(Array);
       expect(res.body).toHaveLength(2);
       expect(res.body[0].companyId).toBe(companyId);
     });

@@ -22,7 +22,7 @@ export const createCompanySchema = z.object({
     state: z.string().min(1).max(100).trim()
   }),
   cnpj: z.string().min(1).max(20).trim(),
-  name: z.string().min(1).max(100).trim(),
+  name: z.string().nonempty().min(1).max(100).trim(),
   sector: z.string().min(1).max(100).trim()
 });
 

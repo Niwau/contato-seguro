@@ -25,9 +25,9 @@ export class EmployeeController {
     }
   };
 
-  find = async (req: Request<PaginationParams>, res: Response, next: NextFunction) => {
+  find = async (req: Request<object, object, PaginationParams>, res: Response, next: NextFunction) => {
     try {
-      const response = await service.find(req.params);
+      const response = await service.find(req.query);
       res.status(200).json(response);
     } catch (e) {
       next(e);

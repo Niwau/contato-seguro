@@ -3,7 +3,14 @@ import { APIError } from "#utils/error.js";
 import { paginate, PaginationParams } from "#utils/pagination.js";
 import { isValidObjectId } from "mongoose";
 
-import { CompanyDTO, CompanyModel, CreateCompanyDTO, createCompanySchema, UpdateCompanyDTO } from "./company.model.js";
+import {
+  CompanyDTO,
+  CompanyModel,
+  CreateCompanyDTO,
+  createCompanySchema,
+  UpdateCompanyDTO,
+  updateCompanySchema
+} from "./company.model.js";
 
 const ENTITY = "Company";
 
@@ -58,7 +65,7 @@ export class CompanyService {
       throw APIError.objectId();
     }
     const { limit, skip } = paginate(params);
-    return EmployeeModel.find({ company: id }).skip(skip).limit(limit);
+    return EmployeeModel.find({ companyId: id }).skip(skip).limit(limit);
   }
 
   async update(id: string, data: UpdateCompanyDTO): Promise<CompanyDTO | null> {
@@ -66,7 +73,9 @@ export class CompanyService {
       throw APIError.objectId();
     }
 
-    const company = await CompanyModel.findByIdAndUpdate(id, data, {
+    const dto = updateCompanySchema.parse(data);
+
+    const company = await CompanyModel.findByIdAndUpdate(id, dto, {
       new: true
     });
 

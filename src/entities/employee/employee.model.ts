@@ -1,4 +1,5 @@
-import mongoose, { isValidObjectId, Schema } from "mongoose";
+import { OBJECT_ID_REGEX } from "#utils/regex.js";
+import mongoose, { Schema } from "mongoose";
 import z from "zod";
 
 const employeeSchema = new Schema(
@@ -42,7 +43,7 @@ const employeeSchema = new Schema(
 
 export const createEmployeeSchema = z
   .object({
-    companyId: z.string().min(1).max(24).trim(),
+    companyId: z.string().min(1).max(24).trim().regex(OBJECT_ID_REGEX),
     email: z.email().max(100).trim(),
     name: z.string().min(1).max(100).trim(),
     password: z.string().min(6).max(100).trim(),
@@ -58,19 +59,22 @@ export const createEmployeeSchema = z
         path: ["terminationDate"]
       });
     }
+  });
 
-    if (!isValidObjectId(data.companyId)) {
+export const updateEmployeeSchema = createEmployeeSchema
+  .partial()
+  .omit({
+    companyId: true
+  })
+  .superRefine((data, ctx) => {
+    if (data.status === "DISMISSED" && !data.terminationDate) {
       ctx.addIssue({
         code: "custom",
-        message: "companyId must be a valid ObjectId",
-        path: ["companyId"]
+        message: "terminationDate is required when status is DISMISSED",
+        path: ["terminationDate"]
       });
     }
   });
-
-export const updateEmployeeSchema = createEmployeeSchema.partial().omit({
-  companyId: true
-});
 
 export type CreateEmployeeDTO = z.infer<typeof createEmployeeSchema>;
 export type EmployeeDTO = Omit<mongoose.InferSchemaType<typeof employeeSchema>, "password">;

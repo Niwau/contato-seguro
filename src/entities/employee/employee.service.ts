@@ -35,8 +35,11 @@ export class EmployeeService {
     const hashedPassword = await hashPassword(dto.password);
     dto.password = hashedPassword;
 
-    // TODO: remove password from returned object
-    return await new EmployeeModel(dto).save();
+    const plain = await new EmployeeModel(dto).save();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...rest } = plain.toObject();
+
+    return rest;
   }
 
   async delete(id: string): Promise<void> {
@@ -76,6 +79,11 @@ export class EmployeeService {
     }
 
     const dto = updateEmployeeSchema.parse(data);
+
+    if (dto.password) {
+      const hashedPassword = await hashPassword(dto.password);
+      dto.password = hashedPassword;
+    }
 
     const employee = await EmployeeModel.findByIdAndUpdate(id, dto, {
       new: true
