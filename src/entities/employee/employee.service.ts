@@ -1,9 +1,9 @@
-import { CompanyModel } from "#entities/company/company.model.js";
-import { APIError } from "#utils/error.js";
-import { hashPassword } from "#utils/hash.js";
-import { paginate, PaginationParams } from "#utils/pagination.js";
 import { isValidObjectId } from "mongoose";
 
+import { CompanyModel } from "../../entities/company/company.model.js";
+import { APIError } from "../../utils/error.js";
+import { hashPassword } from "../../utils/hash.js";
+import { paginate, PaginationParams } from "../../utils/pagination.js";
 import {
   CreateEmployeeDTO,
   createEmployeeSchema,

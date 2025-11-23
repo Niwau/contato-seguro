@@ -2,7 +2,7 @@
   "name": "contato-seguro",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/main.ts",
+  "main": "./src/index.ts",
   "scripts": {
     "dev": "tsx --watch --env-file .env src/index.ts",
     "start": "node --env-file .env dist/index.js",
@@ -41,7 +41,6 @@
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.47.0",
-    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.13"
   },
   "lint-staged": {
@@ -52,11 +51,10 @@
     "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "install": "^0.13.0",
+    "ioredis": "^5.8.2",
     "mongoose": "^9.0.0",
+    "rate-limiter-flexible": "^8.2.1",
     "winston": "^3.18.3",
     "zod": "^4.1.12"
-  },
-  "imports": {
-    "#*": "./src/*"
   }
 }

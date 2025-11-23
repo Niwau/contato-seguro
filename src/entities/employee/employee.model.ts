@@ -1,6 +1,7 @@
-import { OBJECT_ID_REGEX } from "#utils/regex.js";
 import mongoose, { Schema } from "mongoose";
 import z from "zod";
+
+import { OBJECT_ID_REGEX } from "../../utils/regex.js";
 
 const employeeSchema = new Schema(
   {
@@ -49,7 +50,7 @@ export const createEmployeeSchema = z
     password: z.string().min(6).max(100).trim(),
     role: z.string().min(1).max(100).trim(),
     status: z.enum(["ACTIVE", "DISMISSED", "ON_VACATION"]).optional(),
-    terminationDate: z.date().optional()
+    terminationDate: z.coerce.date().optional()
   })
   .superRefine((data, ctx) => {
     if (data.status === "DISMISSED" && !data.terminationDate) {

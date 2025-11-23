@@ -1,6 +1,6 @@
 import { app } from "../../app.js";
-import { CompanyModel } from "#entities/company/company.model.js";
-import * as db from "#tests/db.js";
+import { CompanyModel } from "../../entities/company/company.model.js";
+import * as db from "../../tests/db.js";
 import request from "supertest";
 import { beforeAll, afterEach, beforeEach, afterAll, it, describe, expect } from "vitest";
 
@@ -94,6 +94,19 @@ describe("Employee Integration Tests", () => {
         status: "DISMISSED"
       });
       expect(res.status).toBe(400);
+    });
+
+    it("should create with status DISMISSED", async () => {
+      const res = await request(app).post("/api/v1/employees").send({
+        companyId,
+        email: "duplicate@test.com",
+        name: "Dev 2",
+        password: "123456",
+        role: "Dev",
+        status: "DISMISSED",
+        terminationDate: new Date().toISOString()
+      });
+      expect(res.status).toBe(201);
     });
   });
 

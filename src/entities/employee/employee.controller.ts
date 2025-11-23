@@ -1,6 +1,6 @@
-import { PaginationParams } from "#utils/pagination.js";
 import { NextFunction, Request, Response } from "express";
 
+import { PaginationParams } from "../../utils/pagination.js";
 import { CreateEmployeeDTO, UpdateEmployeeDTO } from "./employee.model.js";
 import { EmployeeService } from "./employee.service.js";
 

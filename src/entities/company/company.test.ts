@@ -1,6 +1,5 @@
 import { app } from "../../app.js";
-import { EmployeeModel } from "#entities/employee/employee.model.js"; // Necessário para testar a relação
-import * as db from "#tests/db.js";
+import * as db from "../../tests/db.js";
 import request from "supertest";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 

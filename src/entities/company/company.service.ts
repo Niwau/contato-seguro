@@ -1,8 +1,8 @@
-import { EmployeeDTO, EmployeeModel } from "#entities/employee/employee.model.js";
-import { APIError } from "#utils/error.js";
-import { paginate, PaginationParams } from "#utils/pagination.js";
 import { isValidObjectId } from "mongoose";
 
+import { EmployeeDTO, EmployeeModel } from "../../entities/employee/employee.model.js";
+import { APIError } from "../../utils/error.js";
+import { paginate, PaginationParams } from "../../utils/pagination.js";
 import {
   CompanyDTO,
   CompanyModel,

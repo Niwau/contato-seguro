@@ -84,10 +84,9 @@ export const paths: OpenAPIV3.PathsObject = {
       }
     }
   },
-  // A rota especial que lista funcionários DE UMA empresa
   "/companies/{id}/employees": {
     get: {
-      tags: ["Companies", "Employees"], // Aparece nas duas categorias
+      tags: ["Companies", "Employees"],
       summary: "Lista funcionários de uma empresa específica",
       parameters: [
         { name: "id", in: "path", required: true, schema: { type: "string" }, description: "ID da Empresa" },

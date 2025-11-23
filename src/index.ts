@@ -1,8 +1,7 @@
-import { SERVER_PORT } from "#config/constants.js";
-import { mongo } from "#config/mongo.js";
-import { logger } from "#utils/logger.js";
-
 import { app } from "./app.js";
+import { SERVER_PORT } from "./config/constants.js";
+import { mongo } from "./config/mongo.js";
+import { logger } from "./utils/logger.js";
 
 async function boostrap() {
   await mongo.connect();
