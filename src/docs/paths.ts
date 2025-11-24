@@ -59,7 +59,7 @@ export const paths: OpenAPIV3.PathsObject = {
         404: { description: "Empresa não encontrada" }
       }
     },
-    put: {
+    patch: {
       tags: ["Companies"],
       summary: "Atualiza dados da empresa",
       parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
@@ -155,7 +155,7 @@ export const paths: OpenAPIV3.PathsObject = {
         404: { description: "Funcionário não encontrado" }
       }
     },
-    put: {
+    patch: {
       tags: ["Employees"],
       summary: "Atualiza funcionário",
       parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
